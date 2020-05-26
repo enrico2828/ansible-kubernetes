@@ -1,0 +1,118 @@
+#  Install Docker and its dependent components.
+- name: Install packages that allow apt to be used over HTTPS
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+
+- name: Add an apt signing key for Docker
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add apt repository for stable version
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    state: present
+
+- name: Install docker and its dependecies
+  apt: 
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - docker-ce 
+    - docker-ce-cli 
+    - containerd.io
+  notify:
+    - docker status
+
+- name: Set docker daemon configuration
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+  notify:
+    - systemd reload
+    - docker reload
+
+- name: Create docker systemd dir
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+
+
+- name: Add vagrant user to docker group
+  user:
+    name: vagrant
+    group: docker
+
+# Kubelet will not start if the system has swap enabled, so we are disabling swap using the below code.
+
+- name: Remove swapfile from /etc/fstab
+  mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  with_items:
+    - swap
+    - none
+
+- name: Disable swap
+  command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+# Installing kubelet, kubeadm and kubectl using the below code.
+
+- name: Add an apt signing key for Kubernetes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Adding apt repository for Kubernetes
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes.list
+
+- name: Install Kubernetes binaries
+  apt: 
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - kubelet=1.18.3-00
+      - kubeadm=1.18.3-00
+      - kubectl=1.18.3-00
+
+- name: Configure node ip
+  lineinfile:
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+    create: yes
+  notify:
+    - kubelet reload
+
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  meta: flush_handlers
+
+# Initialize the Kubernetes cluster with kubeadm using the below code (applicable only on master node).
+
+
+- name: Check if node already initialized 
+  become_user: vagrant
+  shell: "kubectl cluster-info"
+  register: cluster_exists
+  ignore_errors: true
+
+- name: Initialize the Kubernetes cluster using kubeadm
+  command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
+  when: cluster_exists.rc != 0

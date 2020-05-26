@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - ansible-role-initialize-node
+    - ansible-master-node
+
+

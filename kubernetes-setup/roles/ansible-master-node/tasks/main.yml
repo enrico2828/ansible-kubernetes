@@ -1,0 +1,29 @@
+
+
+# Setup the kube config file for the vagrant user to access the Kubernetes cluster using the below code.
+
+- name: Setup kubeconfig for vagrant user
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/vagrant/.kube/config
+    owner: vagrant
+    group: vagrant
+    remote_src: yes
+
+# Setup the container networking provider and the network policy engine using the below code.
+
+- name: Install calico pod network
+  become: false
+  command: kubectl apply -f https://docs.projectcalico.org/v3.14/getting-started/kubernetes/installation/hosted/calico.yaml
+
+# Generate kube join command for joining the node to the Kubernetes cluster and store the command in the file named join-command.
+
+- name: Generate join command
+  become_user: vagrant
+  command: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Copy join command to local file
+  copy:
+    content: "{{ join_command.stdout_lines[0] }}" 
+    dest: "/vagrant/kubernetes-setup/join-command"
