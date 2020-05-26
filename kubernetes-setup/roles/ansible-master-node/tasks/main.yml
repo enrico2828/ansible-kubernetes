@@ -1,6 +1,26 @@
 
+# Initialize the Kubernetes cluster with kubeadm using the below code (applicable only on master node).
+
+
+- name: Check if node already initialized 
+  become_user: vagrant
+  shell: "kubectl cluster-info"
+  register: cluster_exists
+  ignore_errors: true
+
+- name: Initialize the Kubernetes cluster using kubeadm
+  command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
+  when: cluster_exists.rc != 0
+
 
 # Setup the kube config file for the vagrant user to access the Kubernetes cluster using the below code.
+
+- name: Create .kube dir
+  file:
+    path: /home/vagrant/.kube
+    state: directory
+    owner: vagrant
+    group: vagrant    
 
 - name: Setup kubeconfig for vagrant user
   copy:
@@ -9,6 +29,12 @@
     owner: vagrant
     group: vagrant
     remote_src: yes
+
+- name: Copy admin.conf to local file
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: vagrant/kubernetes-setup/admin.conf
+    remote_src: yes   
 
 # Setup the container networking provider and the network policy engine using the below code.
 

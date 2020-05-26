@@ -11,13 +11,13 @@ Following https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-a
 
 ## Installation
 
-Using vagrant en virtualbox we initailise 1 master en 2 worker nodes. Ansible playbooks will be copied to the machines and executed to install kubernetes and requriements and initialize the cluster.
+Using vagrant en virtualbox we initialise 1 master en 2 worker nodes. Ansible playbooks will be copied to the machines and executed to install kubernetes and requriements and initialize the cluster.
 
 Simply execute:
 
 `vagrant up`
 
-Do clean up everything
+To clean up everything
 
 `vagrant destroy`
 

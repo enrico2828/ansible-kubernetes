@@ -104,15 +104,3 @@
 - name: Force all notified handlers to run at this point, not waiting for normal sync points
   meta: flush_handlers
 
-# Initialize the Kubernetes cluster with kubeadm using the below code (applicable only on master node).
-
-
-- name: Check if node already initialized 
-  become_user: vagrant
-  shell: "kubectl cluster-info"
-  register: cluster_exists
-  ignore_errors: true
-
-- name: Initialize the Kubernetes cluster using kubeadm
-  command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
-  when: cluster_exists.rc != 0
