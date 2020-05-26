@@ -1,1 +1,0 @@
-kubeadm join 192.168.50.10:6443 --token sfz4wf.olgsla6ukrtqrqrr     --discovery-token-ca-cert-hash sha256:8e665952cfd7937dafcb93f72cef2bcac403f7175d92483115a7ee93c748e4d7 
