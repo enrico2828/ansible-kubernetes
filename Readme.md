@@ -17,17 +17,25 @@ Simply execute:
 
 `vagrant up`
 
-For your convenience, find the admin.conf to access the cluser in the kuberetes-setup folder of this project.
+Enter a node:
+
+`vagrant ssh master`
+
+`vagrant ssh worker-1`
+
+`vagrant ssh worker-2`
+
+For your convenience, find the `admin.conf` to access the cluser in the `kubernetes-setup` folder of this project.
 
 To clean up everything
 
-`vagrant destroy`
+`vagrant destroy -f`
 
 
 # Versions
 
 The following verions will be installed:
 
-* Ubuntu 18.04 for the nodes
+* Ubuntu 16.04 for the nodes
 * kubernetes 1.18.3
 * Calico network plugin 3.14
