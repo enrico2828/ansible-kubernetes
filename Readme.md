@@ -17,6 +17,8 @@ Simply execute:
 
 `vagrant up`
 
+For your convenience, find the admin.conf to access the cluser in the kuberetes-setup folder of this project.
+
 To clean up everything
 
 `vagrant destroy`
