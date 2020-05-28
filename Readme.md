@@ -6,7 +6,6 @@ Following https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-a
 
 * vagrant
 * virtualbox
-* ansible
 * love for k8s
 
 ## Installation
@@ -34,7 +33,7 @@ To clean up everything
 
 # Versions
 
-The following verions will be installed:
+The following versions will be installed:
 
 * Ubuntu 16.04 for the nodes
 * kubernetes 1.18.3
