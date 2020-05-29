@@ -5,3 +5,11 @@
 
 - name: Join the node to cluster
   command: sh /tmp/join-command.sh
+
+- name: Create dirs for pv's
+  file:
+    path: "{{ items }}"
+    state: directory
+  with_items:
+    - /mnt/data/jira-app
+    - /mnt/data/jiradb

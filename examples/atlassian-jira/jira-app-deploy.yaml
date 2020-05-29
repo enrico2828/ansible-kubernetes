@@ -6,6 +6,8 @@ metadata:
     app: jira
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: jira
@@ -19,9 +21,9 @@ spec:
           image: atlassian/jira-software:8.3.4-jdk11
           env:
             - name: JVM_MINIMUM_MEMORY
-              value: 572m
+              value: 512m
             - name: JVM_MAXIMUM_MEMORY
-              value: 1512m
+              value: 1024m
             - name: JVM_SUPPORT_RECOMMENDED_ARGS
               value: ""
             - name: ATL_JDBC_URL
