@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jira-app-deployment
+  labels:
+    app: jira
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jira
+  template:
+    metadata:
+      labels:
+        app: jira
+    spec:
+      containers:
+        - name: jira
+          image: atlassian/jira-software:8.3.4-jdk11
+          env:
+            - name: JVM_MINIMUM_MEMORY
+              value: 572m
+            - name: JVM_MAXIMUM_MEMORY
+              value: 1512m
+            - name: JVM_SUPPORT_RECOMMENDED_ARGS
+              value: ""
+            - name: ATL_JDBC_URL
+              value: jdbc:postgresql://jira-postgresql:5432/jiradb
+            - name: ATL_JDBC_USER
+              value: jira
+            - name: ATL_JDBC_PASSWORD
+              value: jellyfish
+            - name: ATL_DB_DRIVER
+              value: org.postgresql.Driver
+            - name: ATL_DB_TYPE
+              value: postgres72
+            - name: ATL_TOMCAT_CONTEXTPATH
+              value: /jira
+            - name: ATL_PROXY_NAME
+              value: 192.168.50.10
+            - name: ATL_PROXY_PORT
+              value: "31875"
+          ports: 
+            - containerPort: 8080
+              name: jira-app
+          volumeMounts:
+            - name: jira-persistent-storage
+              mountPath: /var/atlassian/application-data/jira
+      volumes:
+        - name: jira-persistent-storage
+          persistentVolumeClaim:
+            claimName: jira-pv-claim
