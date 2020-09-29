@@ -7,6 +7,8 @@ Vagrant.configure("2") do |config|
     config.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 2
+        # added to use host dns resolving on MacOS (not sure its compatible with other os ..)
+        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
 
     config.vm.define "master" do |master|
