@@ -35,6 +35,6 @@ To clean up everything
 
 The following versions will be installed:
 
-* Ubuntu 16.04 for the nodes
-* kubernetes 1.18.3
+* Ubuntu 18.04 for the nodes
+* kubernetes 1.19.0
 * Calico network plugin 3.14
