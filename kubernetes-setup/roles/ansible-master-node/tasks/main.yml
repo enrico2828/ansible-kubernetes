@@ -53,3 +53,13 @@
   copy:
     content: "{{ join_command.stdout_lines[0] }}" 
     dest: "/vagrant/kubernetes-setup/join-command"
+
+
+- name: Install etcdctl client
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - etcd-client
