@@ -30,7 +30,11 @@ For your convenience, find the `admin.conf` to access the cluser in the `/tmp` o
 
 To install Calico for networking:
 
-`kubectl create calico/`
+`kubectl create -f calico/operator.yaml`
+
+`kubectl apply -f calico/calico.yaml`
+
+`kubectl apply -f calico/calicoctl.yaml`
 
 To clean up everything
 
