@@ -30,17 +30,12 @@
     group: vagrant
     remote_src: yes
 
-- name: Copy admin.conf to local file
-  copy:
+- name: Copy remote admin.conf to local /tmp/admin.conf
+  fetch:
     src: /etc/kubernetes/admin.conf
-    dest: /vagrant/kubernetes-setup/admin.conf
-    remote_src: yes   
+    dest: /tmp/admin.conf
+    flat: yes   
 
-# Setup the container networking provider and the network policy engine using the below code.
-
-- name: Install calico pod network
-  become: false
-  command: kubectl apply -f /vagrant/kubernetes-setup/calico.yaml
 
 # Generate kube join command for joining the node to the Kubernetes cluster and store the command in the file named join-command.
 
@@ -52,8 +47,13 @@
 - name: Copy join command to local file
   copy:
     content: "{{ join_command.stdout_lines[0] }}" 
-    dest: "/vagrant/kubernetes-setup/join-command"
+    dest: "/tmp/join-command"
 
+- name: Copy remote join-command to local /tmp/join-command
+  fetch:
+    src: "/tmp/join-command"
+    dest: "/tmp/join-command"
+    flat: yes  
 
 - name: Install etcdctl client
   apt:

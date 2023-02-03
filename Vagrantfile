@@ -1,14 +1,15 @@
-IMAGE_NAME = "bento/ubuntu-18.04"
+IMAGE_NAME = "generic/ubuntu2004"
 WORKERNODES = 2
 
 Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
-    config.vm.provider "virtualbox" do |v|
+    config.vm.provider "libvirt" do |v|
         v.memory = 2048
         v.cpus = 2
         # added to use host dns resolving on MacOS (not sure its compatible with other os ..)
-        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        #v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        v.qemu_use_session = false
     end
 
     config.vm.define "master" do |master|

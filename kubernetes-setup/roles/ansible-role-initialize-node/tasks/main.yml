@@ -19,40 +19,26 @@
 
 - name: Add apt repository for stable version
   apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
     state: present
 
-- name: Install docker and its dependecies
+- name: Install containerd
   apt: 
     name: "{{ packages }}"
     state: present
     update_cache: yes
   vars:
     packages:
-    - docker-ce 
-    - docker-ce-cli 
-    - containerd.io
+    - containerd.io=1.6.16-1
   notify:
-    - docker status
+    - containerd status
 
-- name: Set docker daemon configuration
-  copy:
-    src: daemon.json
-    dest: /etc/docker/daemon.json
+- name: Copy containerd config.toml
+  template:
+    src: containerd_config_toml.j2
+    dest: /etc/containerd/config.toml
   notify:
-    - systemd reload
-    - docker reload
-
-- name: Create docker systemd dir
-  file:
-    path: /etc/systemd/system/docker.service.d
-    state: directory
-
-
-- name: Add vagrant user to docker group
-  user:
-    name: vagrant
-    group: docker
+    - containerd reload
 
 # Kubelet will not start if the system has swap enabled, so we are disabling swap using the below code.
 
@@ -89,9 +75,9 @@
     update_cache: yes
   vars:
     packages:
-      - kubelet=1.19.0-00
-      - kubeadm=1.19.0-00
-      - kubectl=1.19.0-00
+      - kubelet=1.25.6-00
+      - kubeadm=1.25.6-00
+      - kubectl=1.25.6-00
 
 - name: Configure node ip
   lineinfile:
@@ -101,6 +87,19 @@
   notify:
     - kubelet reload
 
+- name: Add the br_netfilter module
+  modprobe:
+    name: br_netfilter
+    state: present
+
+# Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- name: Set ip forwarding on in /proc and in the sysctl file 
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    state: present
+    reload: yes
+    sysctl_set: yes
+
 - name: Force all notified handlers to run at this point, not waiting for normal sync points
   meta: flush_handlers
-

@@ -1,9 +1,9 @@
 - name: systemd reload
   systemd:
     daemon_reload: yes
-- name: docker status
-  service: name=docker state=started
-- name: docker reload
-  service: name=docker state=restarted  
+- name: containerd status
+  service: name=containerd state=started
+- name: containerd reload
+  service: name=containerd state=restarted
 - name: kubelet reload
-  service: name=docker state=restarted  daemon_reload=yes
+  service: name=kubelet state=restarted  daemon_reload=yes

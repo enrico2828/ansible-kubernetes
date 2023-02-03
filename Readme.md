@@ -5,12 +5,12 @@ Following https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-a
 ## Requirements
 
 * vagrant
-* virtualbox
+* libvirt
 * love for k8s
 
 ## Installation
 
-Using vagrant en virtualbox we initialise 1 master en 2 worker nodes. Ansible playbooks will be copied to the machines and executed to install kubernetes and requriements and initialize the cluster.
+Using vagrant en libvirt we initialise 1 master en 2 worker nodes. Ansible playbooks will be copied to the machines and executed to install kubernetes and requriements and initialize the cluster. Tested on Fedora 37.
 
 Simply execute:
 
@@ -24,7 +24,13 @@ Enter a node:
 
 `vagrant ssh worker-2`
 
-For your convenience, find the `admin.conf` to access the cluser in the `kubernetes-setup` folder of this project.
+For your convenience, find the `admin.conf` to access the cluser in the `/tmp` on your local machine. Set the context:
+
+`export KUBECONFIG=/tmp/admin.conf`
+
+To install Calico for networking:
+
+`kubectl create calico/`
 
 To clean up everything
 
@@ -35,6 +41,6 @@ To clean up everything
 
 The following versions will be installed:
 
-* Ubuntu 18.04 for the nodes
-* kubernetes 1.19.0
-* Calico network plugin 3.14
+* Ubuntu 20.04 for the nodes
+* kubernetes 1.25.6
+* Calico network plugin 3.25
