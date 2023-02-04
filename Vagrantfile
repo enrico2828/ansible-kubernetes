@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
         v.cpus = 2
         # added to use host dns resolving on MacOS (not sure its compatible with other os ..)
         #v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        # fix for making networking work on fedora
         v.qemu_use_session = false
     end
 

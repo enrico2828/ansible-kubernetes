@@ -32,9 +32,20 @@ To install Calico for networking:
 
 `kubectl create -f calico/operator.yaml`
 
-`kubectl apply -f calico/calico.yaml`
-
 `kubectl apply -f calico/calicoctl.yaml`
+
+Calico with iptables:
+
+`kubectl apply -f calico/calico-iptables.yaml`
+
+Calico with eBpf:
+
+```
+kubectl apply -f calico/calico-ebpf.yaml
+# and to turn off kube-proxy
+kubectl patch installation.operator.tigera.io default --type merge -p '{"spec":{"calicoNetwork":{"linuxDataplane":"BPF", "hostPorts":null}}}
+```
+
 
 To clean up everything
 
