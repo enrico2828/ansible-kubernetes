@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "master" do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "private_network", ip: "192.168.50.10"
+        master.vm.network "private_network", ip: "172.20.0.10"
         master.vm.hostname = "master"
         master.vm.provision "ansible" do |ansible|
             ansible.playbook = "kubernetes-setup/master-playbook.yml"
@@ -29,6 +30,7 @@ Vagrant.configure("2") do |config|
         config.vm.define "worker-#{i}" do |node|
             node.vm.box = IMAGE_NAME
             node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
+            node.vm.network "private_network", ip: "172.20.0.#{i + 10}"
             node.vm.hostname = "worker-#{i}"
             node.vm.provision "ansible" do |ansible|
                 ansible.playbook = "kubernetes-setup/node-playbook.yml"
