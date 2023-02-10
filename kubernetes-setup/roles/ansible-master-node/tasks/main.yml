@@ -9,7 +9,13 @@
   ignore_errors: true
 
 - name: Initialize the Kubernetes cluster using kubeadm
-  command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10"  --node-name k8s-master --pod-network-cidr=172.43.0.0/16
+  command: |
+     kubeadm init \
+      --apiserver-advertise-address="{{ apiserver_ip }}" \
+      --apiserver-cert-extra-sans="{{ apiserver_ip }}" \
+      --node-name k8s-master \
+      --pod-network-cidr={{ pod_network_cidr }} \
+      --service-cidr={{ service_cidr }}
   when: cluster_exists.rc != 0
 
 

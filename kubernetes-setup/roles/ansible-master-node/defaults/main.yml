@@ -1,0 +1,4 @@
+# default values
+apiserver_ip: "192.168.50.10"
+pod_network_cidr: "172.43.0.0/16"
+service_cidr: "10.96.0.0/12"

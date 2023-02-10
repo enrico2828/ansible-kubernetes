@@ -29,7 +29,7 @@
     update_cache: yes
   vars:
     packages:
-    - containerd.io=1.6.16-1
+    - containerd.io={{ containerd_version }}
   notify:
     - containerd status
 
@@ -75,9 +75,9 @@
     update_cache: yes
   vars:
     packages:
-      - kubelet=1.25.6-00
-      - kubeadm=1.25.6-00
-      - kubectl=1.25.6-00
+      - kubelet={{ kubernetes_version }}
+      - kubeadm={{ kubernetes_version }}
+      - kubectl={{ kubernetes_version }}
 
 - name: Configure node ip
   lineinfile:
