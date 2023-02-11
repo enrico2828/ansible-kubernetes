@@ -2,14 +2,15 @@ apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
   name: macvlan-conf
+  namespace: default
 spec:
   config: '{
   	"cniVersion": "0.3.1",
-  	"type": "ipvlan",
+  	"type": "macvlan",
         "name": "macvlan-conf",
-        "master": "eth1",
+        "master": "eth2",
   	"ipam": {
     	    "type": "whereabouts",
-    	    "range": "192.168.2.0/24"
+    	    "range": "172.20.0.10/24"
   	}
   }'
