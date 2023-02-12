@@ -1,5 +1,5 @@
 #  Install Docker and its dependent components.
-- name: Install packages that allow apt to be used over HTTPS
+- name: Install required and useful packages
   apt:
     name: "{{ packages }}"
     state: present
@@ -11,6 +11,8 @@
     - curl
     - gnupg-agent
     - software-properties-common
+    - net-tools
+    - inetutils-traceroute
 
 - name: Add an apt signing key for Docker
   apt_key:
@@ -100,6 +102,12 @@
     state: present
     reload: yes
     sysctl_set: yes
+
+- name: Download calicoctl
+  get_url:
+    url: https://github.com/projectcalico/calico/releases/download/{{ calico_version }}/calicoctl-linux-amd64
+    dest: /usr/local/bin/calicoctl
+    mode: '0751'
 
 - name: Force all notified handlers to run at this point, not waiting for normal sync points
   meta: flush_handlers
