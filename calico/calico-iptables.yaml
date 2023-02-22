@@ -25,3 +25,24 @@ kind: APIServer
 metadata: 
   name: default 
 spec: {}
+---
+apiVersion: projectcalico.org/v3
+kind: BGPConfiguration
+metadata:
+  name: default
+spec:
+  logSeverityScreen: Info
+  nodeToNodeMeshEnabled: true
+  asNumber: 64512
+  nodeMeshPassword:
+    secretKeyRef:
+      name: bgp-secret
+      key: password
+---
+apiVersion: v1
+data:
+  # komnaarhetna
+  password: a29tbmFhcmhldG5h
+kind: Secret
+metadata:
+  name: bgp-secret
